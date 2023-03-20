@@ -1,13 +1,13 @@
-# fly.toml file generated for kofeexda on 2023-03-19T03:11:24+01:00
+# fly.toml file generated for datingappkofeex on 2023-03-20T02:17:03+01:00
 
-app = "kofeexda"
+app = "datingappkofeex"
 kill_signal = "SIGINT"
 kill_timeout = 5
 primary_region = "otp"
 processes = []
 
 [build]
-  image = "kofeex/datingapp:lastest"
+  image = "kofeex/datingapp:latest"
 
 [env]
   ASPNETCORE_URLS="http://+:8080"
