@@ -40,7 +40,6 @@ export class MembersService {
 
   resetUserParams() {
     if (this.user) {
-      console.log('inside reset filters')
       this.userParams = new UserParams(this.user);
       return this.userParams;
     }
@@ -52,8 +51,8 @@ export class MembersService {
     const response = this.memberCache.get(Object.values(userParams).join('-'));
 
     if (response) {
-    return of(response);
-  }
+      return of(response);
+    }
 
     let params = getPaginationHeaders(userParams.pageNumber, userParams.pageSize);
 

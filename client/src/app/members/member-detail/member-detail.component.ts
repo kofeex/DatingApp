@@ -2,11 +2,13 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
 import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
+import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 import { Member } from 'src/app/_models/member';
 import { Message } from 'src/app/_models/message';
 import { User } from 'src/app/_models/user';
 import { AccountService } from 'src/app/_services/account.service';
+import { MembersService } from 'src/app/_services/members.service';
 import { MessageService } from 'src/app/_services/message.service';
 import { PresenceService } from 'src/app/_services/presence.service';
 
@@ -16,7 +18,7 @@ import { PresenceService } from 'src/app/_services/presence.service';
   styleUrls: ['./member-detail.component.css']
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {
-  @ViewChild('memberTabs', {static: true}) memberTabs?: TabsetComponent;
+  @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
   member: Member = {} as Member;
   galleryOptions: NgxGalleryOptions[] = [];
   galleryImages: NgxGalleryImage[] = [];
@@ -24,19 +26,20 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   messages: Message[] = [];
   user?: User;
 
-  constructor(private accountService: AccountService, private route: ActivatedRoute, 
-    private messageService: MessageService, public presenceService: PresenceService, private router: Router) {
-      
-      this.accountService.currentUser$.pipe(take(1)).subscribe({
-        next: user => {
-          if (user) {
-            this.user = user;
-          }
-        }
-      })
+  constructor(private accountService: AccountService, private route: ActivatedRoute,
+    private messageService: MessageService, public presenceService: PresenceService, private router: Router,
+    private memberService: MembersService, private toastr: ToastrService) {
 
-      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    }
+    this.accountService.currentUser$.pipe(take(1)).subscribe({
+      next: user => {
+        if (user) {
+          this.user = user;
+        }
+      }
+    })
+
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit(): void {
     this.route.data.subscribe({
@@ -107,4 +110,9 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  addLike(member: Member) {
+    this.memberService.addLike(member.userName).subscribe({
+      next: () => this.toastr.success('You have liked ' + member.knownAs)
+    })
+  }
 }
