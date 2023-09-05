@@ -1,7 +1,8 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NgxGalleryAnimation, NgxGalleryImage, NgxGalleryOptions } from '@kolkov/ngx-gallery';
-import { TabDirective, TabsetComponent } from 'ngx-bootstrap/tabs';
+import { GalleryItem, GalleryModule, ImageItem } from 'ng-gallery';
+import { TabDirective, TabsModule, TabsetComponent } from 'ngx-bootstrap/tabs';
 import { ToastrService } from 'ngx-toastr';
 import { take } from 'rxjs';
 import { Member } from 'src/app/_models/member';
@@ -11,23 +12,26 @@ import { AccountService } from 'src/app/_services/account.service';
 import { MembersService } from 'src/app/_services/members.service';
 import { MessageService } from 'src/app/_services/message.service';
 import { PresenceService } from 'src/app/_services/presence.service';
+import { MemberMessagesComponent } from '../member-messages/member-messages.component';
+import { TimePastPipe } from 'ng-time-past-pipe';
 
 @Component({
+  standalone: true,
   selector: 'app-member-detail',
   templateUrl: './member-detail.component.html',
-  styleUrls: ['./member-detail.component.css']
+  styleUrls: ['./member-detail.component.css'],
+  imports: [GalleryModule, TabsModule, CommonModule, TimePastPipe, MemberMessagesComponent]
 })
 export class MemberDetailComponent implements OnInit, OnDestroy {
   @ViewChild('memberTabs', { static: true }) memberTabs?: TabsetComponent;
   member: Member = {} as Member;
-  galleryOptions: NgxGalleryOptions[] = [];
-  galleryImages: NgxGalleryImage[] = [];
   activeTab?: TabDirective;
   messages: Message[] = [];
   user?: User;
+  images: GalleryItem[] = [];
 
   constructor(private accountService: AccountService, private route: ActivatedRoute,
-    private messageService: MessageService, public presenceService: PresenceService, private router: Router,
+    private messageService: MessageService, public presenceService: PresenceService,
     private memberService: MembersService, private toastr: ToastrService) {
 
     this.accountService.currentUser$.pipe(take(1)).subscribe({
@@ -37,8 +41,6 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
         }
       }
     })
-
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   ngOnInit(): void {
@@ -52,18 +54,7 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
       }
     })
 
-    this.galleryOptions = [
-      {
-        width: '500px',
-        height: '500px',
-        imagePercent: 100,
-        thumbnailsColumns: 4,
-        imageAnimation: NgxGalleryAnimation.Slide,
-        preview: false
-      }
-    ]
-
-    this.galleryImages = this.getImages();
+    this.getImages();
   }
 
   ngOnDestroy(): void {
@@ -71,19 +62,11 @@ export class MemberDetailComponent implements OnInit, OnDestroy {
   }
 
   getImages() {
-    if (!this.member) return [];
-
-    const imageUrls = [];
+    if (!this.member) return;
 
     for (const photo of this.member.photos) {
-      imageUrls.push({
-        small: photo.url,
-        medium: photo.url,
-        big: photo.url
-      })
+      this.images.push(new ImageItem({src: photo.url, thumb: photo.url}))
     }
-
-    return imageUrls;
   }
 
   selectTab(heading: string) {
