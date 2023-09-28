@@ -1,4 +1,3 @@
-using System.Text.Json;
 using API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -22,8 +21,6 @@ namespace API.Data
             }
 
             var userData = await File.ReadAllTextAsync("Data/UserSeedData.json");
-
-            var options = new JsonSerializerOptions{PropertyNameCaseInsensitive = true};
 
             var users = JsonConvert.DeserializeObject<List<AppUser>>(userData);
 

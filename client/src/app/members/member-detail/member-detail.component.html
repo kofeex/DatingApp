@@ -26,7 +26,7 @@
                 <div class="card-footer">
                     <div class="btn-group d-flex">
                         <button (click)="addLike(member)" class="btn btn-primary">Like</button>
-                        <button (click)="selectTab('Messages')" class="btn btn-success">Messages</button>
+                        <button (click)="selectTab('Messages')" class="btn btn-secondary">Messages</button>
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                 <p>{{member.interests}}</p>
             </tab>
             <tab heading="Photos" (selectTab)="onTabActivated($event)" #photoTab="tab">
-                <gallery *ngIf="photoTab.active" [items]="images" class="gallery"></gallery>
+                <gallery *ngIf="photoTab.active" imageSize="contain" thumbPosition="left" [items]="images" class="gallery"></gallery>
             </tab>
             <tab heading="Messages" (selectTab)="onTabActivated($event)">
                 <app-member-messages [username]="member.userName"></app-member-messages>

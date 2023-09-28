@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
@@ -148,6 +147,11 @@ namespace API.Controllers
         public async Task<ActionResult> DeletePhoto(int photoId)
         {
             var user = await _uow.UserRepository.GetUserByUsernameAsync(User.GetUsername());
+
+            if (user == null)
+            {
+                return NotFound();
+            }
 
             var photo = await _uow.PhotoRepository.GetPhotoById(photoId);
 

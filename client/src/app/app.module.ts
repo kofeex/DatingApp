@@ -13,7 +13,6 @@ import { MemberListComponent } from './members/member-list/member-list.component
 import { ListsComponent } from './lists/lists.component';
 import { MessagesComponent } from './messages/messages.component';
 import { SharedModule } from './_modules/shared.module';
-import { TestErrorComponent } from './errors/test-error/test-error.component';
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { NotFoundComponent } from './errors/not-found/not-found.component';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
@@ -31,7 +30,7 @@ import { PhotoManagementComponent } from './admin/photo-management/photo-managem
 import { RolesModalComponent } from './modals/roles-modal/roles-modal.component';
 import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.component';
 import { RouteReuseStrategy } from '@angular/router';
-import { customRouteReuseStrategy } from './_services/CustomRouteReuseStrategy';
+import { customRouteReuseStrategy } from './_services/customRouteReuseStrategy';
 
 @NgModule({
   declarations: [
@@ -42,7 +41,6 @@ import { customRouteReuseStrategy } from './_services/CustomRouteReuseStrategy';
     MemberListComponent,
     ListsComponent,
     MessagesComponent,
-    TestErrorComponent,
     NotFoundComponent,
     ServerErrorComponent,
     MemberCardComponent,
